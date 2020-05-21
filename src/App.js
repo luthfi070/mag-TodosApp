@@ -19,6 +19,7 @@ export class App extends React.Component{
     this.sayHello = this.sayHello.bind(this);
     this.teken = this.teken.bind(this);
     this.done = this.done.bind(this);
+    this.remove = this.remove.bind(this);
   }
 
   sayHello(event) {
@@ -47,6 +48,15 @@ export class App extends React.Component{
     }
   }
 
+  remove(event){
+    var index = todos.findIndex(p => p.nama === event.target.value)
+    console.log(event.target.value)
+    console.log(todos)
+    todos.splice(index, 1)
+    this.setState({hapus: "terhapus" + event.target.value})
+    event.preventDefault();
+  }
+
 render(){
   return(
     <div className="App">
@@ -68,8 +78,11 @@ render(){
                 return(
                   <li className="list-group-item">
                   {todos.nama} 
-                  <button value={todos.nama} name={todos.id} className="btn form-control form-control-sm col-sm-4 bg-light rounded-pill" onClick={this.done}>
+                  <button value={todos.nama} name={todos.id} className="btn form-control form-control-sm col-sm-4 bg-success rounded-pill" onClick={this.done}>
                     Done 
+                  </button>
+                  <button value={todos.nama} name={todos.id} className="btn form-control form-control-sm col-sm-5 bg-danger rounded-pill" onClick={this.remove}>
+                    Remove
                   </button>
                   </li>
                 );
