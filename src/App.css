@@ -31,12 +31,13 @@
 }
 
 .Kartu{
-  width: 18rem;
+  margin-left: -40px;
 }
 
 .Navbar{
   margin-left: -170px;
 }
+
 
 @keyframes App-logo-spin {
   from {

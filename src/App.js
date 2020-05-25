@@ -4,6 +4,7 @@ import './App.css';
 import { render } from '@testing-library/react';
 
 var todos = []
+var BreakException = {};
 
 todos.push({id: 1, nama: 'belajar', status: 'belum selesai'});
 todos.push({id: 2, nama: 'kuliah', status: 'belum selesai'});
@@ -20,6 +21,8 @@ export class App extends React.Component{
     this.teken = this.teken.bind(this);
     this.done = this.done.bind(this);
     this.remove = this.remove.bind(this);
+    this.edit = this.edit.bind(this);
+    this.editTodos = this.editTodos.bind(this);
   }
 
   sayHello(event) {
@@ -27,10 +30,25 @@ export class App extends React.Component{
   }
 
   teken(event){
-    this.setState({nama: event.target.value});
-    const angka = todos.length;
-    todos.push({id: angka+1, nama: this.state.value, status: 'belum selesai'});
     event.preventDefault();
+    const newValue = event.target.value
+    var count = todos.length
+    this.setState({ nama: newValue});
+    const angka = todos.length;
+    for(var i = 0; i < todos.length; i++){
+      if(todos[i].nama === newValue){
+        this.setState({ beda: false })
+        alert("tidak boleh sama")
+        count += todos.length
+        console.log(count)
+        break
+      }else{
+        count -= 1
+      }
+    }
+    if(count < todos.length){
+      todos.push({id: angka, nama: event.target.value, status: 'belum selesai'})
+    }
   }
 
   done(event){
@@ -57,6 +75,18 @@ export class App extends React.Component{
     event.preventDefault();
   }
 
+  editTodos(event) {
+    this.setState({edit: event.target.value})
+  }
+
+  edit(event){
+    this.setState({edit: true})
+    var index = todos.findIndex(p => p.nama === event.target.value)
+    const baru = todos.push({id: index, nama: this.state.edit, status: 'belum selesai'})
+    todos.splice(index, 1)
+    console.log(this.state.edit)
+  }
+
 render(){
   return(
     <div className="App">
@@ -64,29 +94,40 @@ render(){
         <form onSubmit={this.handleSubmit}>
         <nav className="navbar navbar-dark bg-dark rounded-pill col-sm-8">  
           <input type="text" value={this.state.value} onChange={this.sayHello} className="form-control form-control-sm col-sm-6 rounded-pill" name="aktivitas"></input>
-          <button className="btn form-control form-control-sm col-sm-4 bg-light rounded-pill" onClick={this.teken}>
+          <button value={this.state.value} className="btn form-control form-control-sm col-sm-4 bg-light rounded-pill" onClick={this.teken}>
             Tambah 
           </button>
         </nav>
         </form>
       </div>
       <br></br><br></br>
-      <div className="Kartu card">
+      <div className="Kartu card col-sm-6 ">
         <ul className="list-group list-group-flush"> 
               {todos.map(todos => 
               {if(todos.status === "belum selesai")
                 return(
                   <li className="list-group-item">
-                  {todos.nama} 
+                  {todos.nama}
+                  <br></br>
                   <button value={todos.nama} name={todos.id} className="btn form-control form-control-sm col-sm-4 bg-success rounded-pill" onClick={this.done}>
                     Done 
                   </button>
                   <button value={todos.nama} name={todos.id} className="btn form-control form-control-sm col-sm-5 bg-danger rounded-pill" onClick={this.remove}>
                     Remove
                   </button>
+                  <br></br><br></br>
+                  <button value={todos.nama} name={todos.id} className="btn form-control form-control-sm col-sm-5 bg-warning rounded-pill" onClick={this.edit}>
+                    Edit
+                  <input type="text" className="form-control" onChange={this.editTodos}/>
+                  </button>
+                  <br></br><br></br><br></br>
                   </li>
                 );
-                else
+                if(this.state.edit === "naon"){
+                  return(
+                    console.log("asd")
+                  );
+                }
                 return(
                   <li className="list-group-item">
                   <s>{todos.nama}</s> 
